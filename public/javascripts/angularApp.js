@@ -18,7 +18,12 @@ angular.module('flapperNews', ['ui.router'])
       .state('posts', {
         url: '/posts/{id}',
         templateUrl: '/posts.html',
-        controller: 'PostsCtrl'
+        controller: 'PostsCtrl',
+        resolve: {
+          post: {'$stateParams', 'posts', function($stateParams, posts) {
+            return posts.get($stateParams.id);
+          }}
+        }
       });
 
     $urlRouterProvider.otherwise('home');
@@ -33,6 +38,12 @@ angular.module('flapperNews', ['ui.router'])
       .success(function(data) {
         angular.copy(data, o.posts);
       });
+  };
+
+  o.get = function(id) {
+    return $http.get('/posts/' + id).then(function(res) {
+      return res.data;
+    });
   };
 
   o.create = function(post) {
@@ -77,8 +88,9 @@ angular.module('flapperNews', ['ui.router'])
   '$scope',
   '$stateParams',
   'posts',
-  function($scope, $stateParams, posts) {
-    $scope.post = posts.posts[$stateParams.id];
+  'post',
+  function($scope, $stateParams, posts, post) {
+    $scope.post = post;
 
     $scope.addComment = function() {
       if($scope.body === '') { return; }
