@@ -32,7 +32,14 @@ angular.module('flapperNews', ['ui.router'])
     return $http.get('/posts').success(function(data) {
       angular.copy(data, o.posts);
     });
-  };
+  }
+
+  o.create = function(post) {
+    return $http.post('/posts', post).success(function(data) {
+      o.posts.push(data);
+    })
+  }
+
   return o;
 }])
 .controller('MainCtrl', [
@@ -43,14 +50,9 @@ angular.module('flapperNews', ['ui.router'])
 
     $scope.addPost = function() {
       if(!$scope.title || $scope.title === '') { return; }
-      $scope.posts.push({
+      posts.create({
         title: $scope.title,
         link: $scope.link,
-        upvotes: 0,
-        comments: [
-          {author: 'Josh', body: 'VHS Head is awesome', upvotes: 2},
-          {author: 'Ash', body: 'VHS Head is not so awesome', upvotes: 2}
-        ]
       });
       $scope.title = '';
       $scope.link = '';
