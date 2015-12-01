@@ -47,6 +47,7 @@ router.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
+// get single post
 router.get('/posts', function(req, res, next) {
   Post.find(function(err, posts) {
     if(err){ return next(err); }
@@ -55,6 +56,7 @@ router.get('/posts', function(req, res, next) {
   });
 });
 
+// post new post
 router.post('/posts', auth, function(req, res, next) {
   var post = new Post(req.body);
 
@@ -65,6 +67,7 @@ router.post('/posts', auth, function(req, res, next) {
   });
 });
 
+// params
 router.param('post', function(req, res, next, id) {
   var query = Post.findById(id);
 
@@ -89,6 +92,7 @@ router.param('comment', function(req, res, next, id) {
   });
 });
 
+// get all posts
 router.get('/posts/:post', function(req,res) {
   req.post.populate('comments', function(err, post) {
     if(err) { return next(err); }
@@ -97,6 +101,7 @@ router.get('/posts/:post', function(req,res) {
   });
 });
 
+// upvote post
 router.put('/posts/:post/upvote', auth, function(req, res, next) {
   req.post.upvote(function(err, post) {
     if(err) { return next(err); }
@@ -105,6 +110,7 @@ router.put('/posts/:post/upvote', auth, function(req, res, next) {
   });
 });
 
+// upvote comment
 router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, next) {
   req.comment.upvote(function(err, comment) {
     if(err) { return next(err); }
@@ -113,6 +119,7 @@ router.put('/posts/:post/comments/:comment/upvote', auth, function(req, res, nex
   });
 });
 
+// comment - post new
 router.post('/posts/:post/comments', auth, function(req, res, next) {
   var comment = new Comment(req.body);
   comment.post = req.post;
