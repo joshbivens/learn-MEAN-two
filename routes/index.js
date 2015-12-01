@@ -42,7 +42,7 @@ router.param('post', function(req, res, next, id) {
 router.param('comment', function(req, res, next, id) {
   var query = Comment.findById(id);
 
-  query.exec(function (err, post){
+  query.exec(function (err, comment){
     if (err) { return next(err); }
     if (!comment) { return next(new Error('can\'t find comment')); }
 
@@ -52,9 +52,9 @@ router.param('comment', function(req, res, next, id) {
 });
 
 router.get('/posts/:post', function(req,res) {
-  res.post.populate('comments', function(err, post) {
+  req.post.populate('comments', function(err, post) {
     if(err) { return next(err); }
-    
+
     res.json(post);
   });
 });
@@ -82,7 +82,7 @@ router.post('/posts/:post/comments', function(req, res, next) {
   comment.save(function(err, comment) {
     if(err) { return next(err); }
 
-    req.post.comment.push(comment);
+    req.post.comments.push(comment);
     req.post.save(function() {
       if(err) { return next(err); }
 
