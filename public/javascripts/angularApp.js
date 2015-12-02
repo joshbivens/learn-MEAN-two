@@ -74,7 +74,7 @@ angular.module('flapperNews', ['ui.router'])
       });
   }
 
-  auth.logout = function() {
+  auth.logOut = function() {
     $window.localStorage.removeItem('flapper-news-token');
   }
 
