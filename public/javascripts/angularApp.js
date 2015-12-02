@@ -80,6 +80,30 @@ angular.module('flapperNews', ['ui.router'])
 
   return auth;
 }])
+.controller('AuthCtrl', [
+  '$scope',
+  '$state',
+  'auth',
+  function($scope, $state, auth) {
+    $scope.user = {};
+
+    $scope.register = function() {
+      auth.register($scope.user).error(function() {
+        $scope.error = error;
+      }).then(function() {
+        $state.go('home');
+      });
+    };
+
+    $scope.logIn = function() {
+      auth.logIn($scope.user).error(function() {
+        $scope.error = error;
+      }).then(function() {
+        $state.go('home');
+      });
+    };
+  };
+])
 .factory('posts', ['$http', function($http){
   var o = {
     posts: []
