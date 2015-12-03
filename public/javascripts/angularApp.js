@@ -153,14 +153,16 @@ angular.module('flapperNews', ['ui.router'])
 .controller('MainCtrl', [
   '$scope',
   'posts',
-  function ($scope, posts) {
+  'auth',
+  function ($scope, posts, auth) {
     $scope.posts = posts.posts;
+    $scope.isLoggedIn = auth.isLoggedIn;
 
     $scope.addPost = function() {
       if(!$scope.title || $scope.title === '') { return; }
       posts.create({
         title: $scope.title,
-        link: $scope.link,
+        link: $scope.link
       });
       $scope.title = '';
       $scope.link = '';
@@ -175,14 +177,15 @@ angular.module('flapperNews', ['ui.router'])
   '$scope',
   'posts',
   'post',
-  function($scope, posts, post) {
+  'auth',
+  function($scope, posts, post, auth) {
     $scope.post = post;
+    $scope.isLoggedIn = auth.isLoggedIn;
 
     $scope.addComment = function() {
       if($scope.body === '') { return; }
       posts.addComment(post._id, {
-        body: $scope.body,
-        author: 'user'
+        body: $scope.body
       }).success(function(comment) {
         $scope.post.comments.push(comment);
       });
